@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LearnHub — Platform Kursus Online Terbaik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+            rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --ink: #09090B;
+            --ink-2: #3F3F46;
+            --ink-3: #71717A;
+            --ink-4: #A1A1AA;
+            --ink-5: #D4D4D8;
+            --surface: #FAFAFA;
+            --surface-2: #F4F4F5;
+            --white: #FFFFFF;
+            --blue: #2563EB;
+            --blue-light: #3B82F6;
+            --blue-dark: #1D4ED8;
+            --blue-soft: #EFF6FF;
+            --blue-mid: #DBEAFE;
+            --amber: #F59E0B;
+            --amber-soft: #FEF3C7;
+            --emerald: #10B981;
+            --emerald-soft: #D1FAE5;
+            --rose: #F43F5E;
+            --violet: #7C3AED;
+            --r: 14px;
+            --r-sm: 8px;
+            --r-lg: 24px;
+            --r-xl: 32px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, .06);
+            --shadow: 0 4px 20px rgba(0, 0, 0, .07);
+            --shadow-lg: 0 12px 48px rgba(0, 0, 0, .1);
+            --shadow-blue: 0 8px 32px rgba(37, 99, 235, .25);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--white);
+            color: var(--ink);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Sora', sans-serif;
+            line-height: 1.25;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+        button { cursor: pointer; font-family: inherit; border: none; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--ink-5); border-radius: 99px; }
+
+        .container { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: var(--r-sm);
+            font-size: .9rem;
+            font-weight: 600;
+            transition: all .2s ease;
+            white-space: nowrap;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(37, 99, 235, .3); }
+        .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: var(--shadow-blue); }
+        .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink-5); }
+        .btn-outline:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+        .btn-ghost { background: transparent; color: var(--ink-3); }
+        .btn-ghost:hover { color: var(--ink); background: var(--surface-2); }
+        .btn-lg { padding: 15px 32px; font-size: 1rem; border-radius: var(--r); }
+        .btn-sm { padding: 7px 16px; font-size: .82rem; }
+
+        /* ══ NAVBAR ══ */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 200;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(255, 255, 255, .85);
+            backdrop-filter: blur(16px) saturate(180%);
+            border-bottom: 1px solid rgba(0, 0, 0, .06);
+            transition: background .3s, box-shadow .3s;
+        }
+
+        /* FIX #7: scrolled class sekarang ditambahkan via JS */
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, .97);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+
+        .brand-icon {
+            width: 38px; height: 38px;
+            background: var(--blue);
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800; color: #fff; font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(37, 99, 235, .35);
+        }
+
+        .brand-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em;
+        }
+
+        .nav-links { display: flex; align-items: center; gap: 4px; }
+
+        .nav-link {
+            padding: 7px 14px;
+            border-radius: var(--r-sm);
+            font-size: .9rem; font-weight: 500;
+            color: var(--ink-2);
+            transition: all .18s;
+        }
+
+        .nav-link:hover { color: var(--blue); background: var(--blue-soft); }
+
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 22px; height: 2px;
+            background: var(--ink); border-radius: 2px;
+            transition: all .25s;
+            display: block;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            inset: 0; top: 64px;
+            background: rgba(255, 255, 255, .98);
+            backdrop-filter: blur(12px);
+            padding: 24px 28px;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 150;
+            overflow-y: auto;
+        }
+
+        .mobile-nav.open { display: flex; }
+        .mobile-nav .nav-link { padding: 14px 16px; font-size: 1rem; display: block; border-radius: var(--r-sm); }
+
+        /* ══ HERO ══ */
+        .hero {
+            min-height: 100vh;
+            background: #05091A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 28px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+        .hero-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: blobFloat 8s ease-in-out infinite;
+        }
+
+        .hero-blob-1 { width: 600px; height: 600px; background: rgba(37, 99, 235, .22); top: -200px; left: -100px; }
+        .hero-blob-2 { width: 500px; height: 500px; background: rgba(124, 58, 237, .18); bottom: -150px; right: -100px; animation-delay: -3s; }
+        /* FIX #5: blob-3 ditambahkan ke HTML */
+        .hero-blob-3 { width: 380px; height: 380px; background: rgba(245, 158, 11, .09); top: 30%; left: 42%; animation-delay: -5s; }
+
+        @keyframes blobFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .hero-content { position: relative; z-index: 2; width: 100%; max-width: 860px; }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.4rem, 6vw, 4.4rem);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -.03em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            animation: fadeUp .8s .1s ease both;
+        }
+
+        .hero h1 .hl-blue {
+            background: linear-gradient(135deg, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: rgba(255, 255, 255, .6);
+            max-width: 540px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            animation: fadeUp .8s .2s ease both;
+        }
+
+        .hero-search {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: var(--r);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, .3);
+            max-width: 580px;
+            width: 100%;
+            margin: 0 auto 48px;
+            overflow: hidden;
+            animation: fadeUp .8s .3s ease both;
+        }
+
+        .hero-search input {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            outline: none;
+            font-size: .95rem;
+            font-family: 'DM Sans', sans-serif;
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .hero-search input::placeholder { color: var(--ink-4); }
+
+        .hero-search .btn { margin: 6px; border-radius: 10px; padding: 12px 22px; }
+
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            animation: fadeUp .8s .4s ease both;
+        }
+
+        .hs-item { text-align: center; }
+        .hs-num { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1; }
+        .hs-label { font-size: .78rem; color: rgba(255, 255, 255, .4); margin-top: 4px; }
+        .hs-sep { width: 1px; height: 36px; background: rgba(255, 255, 255, .1); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ══ SECTIONS ══ */
+        section { padding: 96px 0; }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -.02em;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+
+        /* FIX #6: reveal observer sekarang diinisialisasi via JS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .65s ease, transform .65s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ══ CATEGORIES ══ */
+        .categories-section { background: var(--white); }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 14px;
+            margin-top: 32px;
+        }
+
+        .cat-card {
+            background: var(--surface);
+            border: 1.5px solid var(--ink-5);
+            border-radius: var(--r);
+            padding: 24px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .22s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; background: var(--blue-soft); }
+
+        .cat-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; transition: transform .22s; }
+        .cat-card:hover .cat-icon { transform: scale(1.12); }
+        .cat-name { font-size: .875rem; font-weight: 700; color: var(--ink); }
+        .cat-count { font-size: .76rem; color: var(--ink-4); margin-top: 4px; }
+
+        /* ══ COURSES ══ */
+        .courses-section { background: var(--surface); }
+
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .pill {
+            padding: 8px 18px;
+            border-radius: 99px;
+            font-size: .84rem; font-weight: 600;
+            border: 1.5px solid var(--ink-5);
+            background: var(--white);
+            color: var(--ink-3);
+            cursor: pointer;
+            transition: all .18s;
+        }
+
+        .pill:hover { border-color: var(--blue); color: var(--blue); }
+        .pill.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+        .sort-select {
+            padding: 9px 14px;
+            border-radius: var(--r-sm);
+            border: 1.5px solid var(--ink-5);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .875rem;
+            background: var(--white);
+            color: var(--ink-2);
+            cursor: pointer;
+            outline: none;
+            transition: border .18s;
+        }
+
+        .sort-select:focus { border-color: var(--blue); }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 22px;
+        }
+
+        .course-card {
+            background: var(--white);
+            border-radius: var(--r);
+            overflow: hidden;
+            border: 1px solid var(--ink-5);
+            transition: all .25s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
+        .course-card:hover .ct-bg { transform: scale(1.07); }
+        .course-card:hover .ct-overlay { opacity: 1; }
+
+        .course-thumb { position: relative; height: 188px; overflow: hidden; }
+
+        .ct-bg {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3.5rem;
+            transition: transform .4s ease;
+        }
+
+        .ct-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0, 0, 0, .42);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity .25s;
+        }
+
+        .ct-overlay span {
+            background: #fff; color: var(--blue);
+            padding: 9px 22px;
+            border-radius: 99px;
+            font-size: .875rem; font-weight: 700;
+        }
+
+        .course-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+
+        .c-cat {
+            display: inline-block;
+            font-size: .72rem; font-weight: 700;
+            color: var(--blue); background: var(--blue-soft);
+            padding: 3px 10px; border-radius: 99px;
+            margin-bottom: 10px;
+        }
+
+        .c-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; line-height: 1.4; flex: 1; }
+        .c-instructor { display: flex; align-items: center; gap: 7px; font-size: .82rem; color: var(--ink-3); margin-bottom: 14px; }
+
+        .c-footer {
+            border-top: 1px solid var(--ink-5);
+            padding-top: 14px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .c-rating { display: flex; align-items: center; gap: 5px; font-size: .82rem; }
+        .c-stars { color: var(--amber); }
+        .c-price { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 800; color: var(--blue); }
+        .c-price.free { color: var(--emerald); }
+
+        .enroll-btn {
+            width: 100%; margin-top: 12px; padding: 10px;
+            border-radius: var(--r-sm);
+            font-size: .875rem; font-weight: 600;
+            background: var(--blue-soft); color: var(--blue);
+            border: 1.5px solid var(--blue-mid);
+            transition: all .18s; cursor: pointer;
+        }
+
+        .enroll-btn:hover { background: var(--blue); color: #fff; }
+
+        .enroll-btn.enrolled {
+            background: var(--emerald-soft); color: #065F46;
+            border-color: #A7F3D0; cursor: default;
+        }
+
+        .enroll-btn.enrolled:hover { background: var(--emerald-soft); color: #065F46; }
+
+        /* Skeleton loader */
+        .skel-card { border-radius: var(--r); overflow: hidden; border: 1px solid var(--ink-5); background: var(--white); }
+        .skel-thumb { height: 188px; }
+        .skel-body { padding: 20px; }
+        .skel-line { height: 13px; margin-bottom: 10px; border-radius: 4px; }
+        .skel-line.w-3-4 { width: 75%; }
+        .skel-line.w-1-3 { width: 33%; }
+
+        .shimmer {
+            background: linear-gradient(90deg, var(--surface-2) 25%, var(--ink-5) 50%, var(--surface-2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* Empty state */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--ink-3);
+        }
+
+        .empty-state .es-icon { font-size: 3rem; margin-bottom: 12px; }
+        .empty-state p { font-size: 1rem; }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .toast {
+            background: var(--ink); color: #fff;
+            padding: 14px 20px;
+            border-radius: var(--r-sm);
+            font-size: .875rem; font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            display: flex; align-items: center; gap: 10px;
+            min-width: 260px;
+            animation: slideToast .3s ease;
+        }
+
+        .toast.success { background: var(--emerald); }
+        .toast.error { background: var(--rose); }
+
+        @keyframes slideToast {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Error banner */
+        .error-banner {
+            grid-column: 1 / -1;
+            background: #FFF1F2;
+            border: 1px solid #FECDD3;
+            border-radius: var(--r);
+            padding: 24px;
+            text-align: center;
+            color: var(--rose);
+        }
+
+        .error-banner strong { display: block; margin-bottom: 6px; }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions { display: none; }
+            .hamburger { display: flex; }
+            .hero-stats { gap: 20px; }
+            .hs-sep { display: none; }
+            .courses-grid { grid-template-columns: 1fr; }
+            .cat-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar" id="navbar">
+    <a href="index.html" class="brand">
+        <div class="brand-icon">L</div>
+        <span class="brand-name">LearnHub</span>
+    </a>
+    <div class="nav-links">
+        <a href="#courses" class="nav-link">Kursus</a>
+        <a href="#categories" class="nav-link">Kategori</a>
+    </div>
+    <div class="nav-actions" id="navActions"></div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+    <a href="#courses" class="nav-link" onclick="closeMobile()">📚 Kursus</a>
+    <a href="#categories" class="nav-link" onclick="closeMobile()">📌 Kategori</a>
+    <hr style="border:none;border-top:1px solid var(--ink-5);margin:8px 0;" />
+    <div id="mobileNavActions"></div>
+</div>
+
+<section class="hero" id="home">
+    <div class="hero-bg">
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+        <!-- FIX #5: hero-blob-3 ditambahkan ke HTML (sebelumnya ada di CSS tapi tidak di HTML) -->
+        <div class="hero-blob hero-blob-3"></div>
+        <div class="hero-grid"></div>
+    </div>
+    <div class="hero-content">
+        <h1>Tingkatkan <span class="hl-blue">Skill Kamu</span></h1>
+        <p class="hero-sub">Pelajari keterampilan baru dari instruktur berpengalaman.</p>
+        <div class="hero-search">
+            <input type="text" id="heroSearch" placeholder="Cari kursus, kategori..."
+                   onkeydown="if(event.key==='Enter') doSearch()" />
+            <button class="btn btn-primary" onclick="doSearch()">Cari Sekarang</button>
+        </div>
+        <div class="hero-stats">
+            <div class="hs-item">
+                <div class="hs-num" id="hsCourses">—</div>
+                <div class="hs-label">Total Kursus</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="categories-section" id="categories">
+    <div class="container">
+        <div class="reveal">
+            <h2 class="section-title">Kategori Populer</h2>
+        </div>
+        <!-- FIX #4: catGrid sekarang terpisah dari section-header agar reveal bekerja benar -->
+        <div class="cat-grid reveal" id="catGrid"></div>
+    </div>
+</section>
+
+<section class="courses-section" id="courses">
+    <div class="container">
+        <div class="reveal">
+            <h2 class="section-title">Mulai Belajar Sekarang</h2>
+        </div>
+        <div class="filters-bar reveal">
+            <div class="filter-pills" id="filterPills">
+                <!-- FIX #1: filterCat diubah menjadi filterByCat agar konsisten dengan fungsi JS -->
+                <button class="pill active" data-cat="all" onclick="filterByCat('all', this)">Semua</button>
+            </div>
+            <select class="sort-select" onchange="sortCourses(this.value)">
+                <option value="newest">Terbaru</option>
+                <option value="popular">Terpopuler</option>
+                <option value="price_asc">Harga Terendah</option>
+            </select>
+        </div>
+        <div class="courses-grid" id="coursesGrid">
+            <!-- Skeleton loaders -->
+            <div class="skel-card">
+                <div class="skel-thumb shimmer"></div>
+                <div class="skel-body">
+                    <div class="shimmer skel-line w-1-3"></div>
+                    <div class="shimmer skel-line w-3-4" style="height:18px;margin-bottom:14px;"></div>
+                </div>
+            </div>
+            <div class="skel-card">
+                <div class="skel-thumb shimmer"></div>
+                <div class="skel-body">
+                    <div class="shimmer skel-line w-1-3"></div>
+                    <div class="shimmer skel-line w-3-4" style="height:18px;margin-bottom:14px;"></div>
+                </div>
+            </div>
+            <div class="skel-card">
+                <div class="skel-thumb shimmer"></div>
+                <div class="skel-body">
+                    <div class="shimmer skel-line w-1-3"></div>
+                    <div class="shimmer skel-line w-3-4" style="height:18px;margin-bottom:14px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="toast-container"></div>
+
+<script>
+    /* ═══════════════════════════════════════════════════════
+     * KONFIGURASI
+     * Sesuaikan BASE_URL dengan port backend Spring Boot kamu
+     * ═══════════════════════════════════════════════════════ */
+    const BASE_URL = 'http://localhost:8080/api';
+
+    /* ═══════════════════════════════════════════════════════
+     * AUTH HELPER
+     * ═══════════════════════════════════════════════════════ */
+    const Auth = {
+        isLoggedIn: () => localStorage.getItem('token') !== null,
+        getUser: () => {
+            const u = localStorage.getItem('user');
+            return u ? JSON.parse(u) : null;
+        },
+        getToken: () => localStorage.getItem('token'),
+        clear: () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
+    };
+
+    /* ═══════════════════════════════════════════════════════
+     * API CALLS  →  Spring Boot endpoints
+     * ═══════════════════════════════════════════════════════ */
+    const API = {
+        /* GET /api/courses  →  @GetMapping("/courses") */
+        getAllCourses: async () => {
+            const res = await fetch(`${BASE_URL}/courses`);
+            if (!res.ok) throw new Error(`Server error: ${res.status}`);
+            return await res.json();
+        },
+
+        /* POST /api/courses/{id}/enroll  →  @PostMapping("/{id}/enroll") */
+        enroll: async (courseId) => {
+            const res = await fetch(`${BASE_URL}/courses/${courseId}/enroll`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            if (!res.ok) {
+                const errBody = await res.json().catch(() => ({}));
+                throw new Error(errBody.message || `Gagal enroll (${res.status})`);
+            }
+            return await res.json();
+        }
+    };
+
+    /* ═══════════════════════════════════════════════════════
+     * STATE
+     * ═══════════════════════════════════════════════════════ */
+    let allCourses     = [];
+    let filteredCourses = [];
+    let activeCat   = 'all';
+    let activeSort  = 'newest';
+
+    const GRADIENTS = [
+        'linear-gradient(135deg,#667eea,#764ba2)',
+        'linear-gradient(135deg,#f093fb,#f5576c)',
+        'linear-gradient(135deg,#4facfe,#00f2fe)',
+        'linear-gradient(135deg,#43e97b,#38f9d7)',
+        'linear-gradient(135deg,#fa709a,#fee140)'
+    ];
+
+    const CAT_EMOJI = {
+        'Pemrograman': '💻',
+        'Design': '🎨',
+        'Bisnis': '💼',
+        'Data Science': '📊',
+        'Marketing': '📣',
+        'Bahasa': '🗣️',
+        'default': '📚'
+    };
+
+    /* ═══════════════════════════════════════════════════════
+     * FIX #7: Navbar scroll effect
+     * ═══════════════════════════════════════════════════════ */
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    /* ═══════════════════════════════════════════════════════
+     * FIX #6: Scroll reveal observer diinisialisasi
+     * ═══════════════════════════════════════════════════════ */
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                revealObserver.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    function initReveal() {
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * NAVBAR
+     * ═══════════════════════════════════════════════════════ */
+    function renderNavbar() {
+        const el  = document.getElementById('navActions');
+        const mob = document.getElementById('mobileNavActions');
+
+        if (Auth.isLoggedIn()) {
+            el.innerHTML  = `<button class="btn btn-outline" onclick="doLogout()">Keluar</button>`;
+            mob.innerHTML = `<button class="nav-link" style="color:var(--rose)" onclick="doLogout()">Keluar</button>`;
+        } else {
+            el.innerHTML  = `<a href="login.html" class="btn btn-ghost">Masuk</a>
+                             <a href="register.html" class="btn btn-primary">Daftar</a>`;
+            mob.innerHTML = `<a href="login.html" class="nav-link">Masuk</a>
+                             <a href="register.html" class="nav-link">Daftar</a>`;
+        }
+    }
+
+    function doLogout() {
+        Auth.clear();
+        renderNavbar();
+        showToast('Berhasil keluar.');
+    }
+
+    function toggleMobile() { document.getElementById('mobileNav').classList.toggle('open'); }
+    function closeMobile()  { document.getElementById('mobileNav').classList.remove('open'); }
+
+    /* ═══════════════════════════════════════════════════════
+     * LOAD COURSES
+     * ═══════════════════════════════════════════════════════ */
+    async function loadCourses() {
+        try {
+            const data = await API.getAllCourses();
+            /* Spring Boot bisa return array langsung atau Page<> object */
+            allCourses = Array.isArray(data) ? data : (data?.content ?? []);
+
+            document.getElementById('hsCourses').textContent = allCourses.length + '+';
+            buildCategoryFilters();
+            filteredCourses = [...allCourses];
+            renderCourses();
+            initReveal(); // jalankan reveal setelah konten ada
+        } catch (err) {
+            console.error('loadCourses error:', err);
+            document.getElementById('coursesGrid').innerHTML = `
+                <div class="error-banner">
+                    <strong>⚠️ Tidak dapat terhubung ke server</strong>
+                    Pastikan Spring Boot berjalan di <code>localhost:8080</code>.
+                    <br><small>${err.message}</small>
+                </div>`;
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * FIX #4: buildCategoryFilters sekarang update BOTH
+     *         catGrid (tampilan) dan filterPills (tombol filter)
+     * ═══════════════════════════════════════════════════════ */
+    function buildCategoryFilters() {
+        const cats = [...new Set(allCourses.map(c => c.category).filter(Boolean))];
+
+        /* --- Category Grid (visual cards) --- */
+        document.getElementById('catGrid').innerHTML = cats.length
+            ? cats.map(cat => `
+                <div class="cat-card" onclick="filterByCat('${cat}', null)">
+                    <span class="cat-icon">${CAT_EMOJI[cat] ?? CAT_EMOJI.default}</span>
+                    <div class="cat-name">${cat}</div>
+                    <div class="cat-count">${allCourses.filter(c => c.category === cat).length} kursus</div>
+                </div>`).join('')
+            : '<p style="color:var(--ink-4);font-size:.875rem;">Belum ada kategori.</p>';
+
+        /* --- Filter Pills (di atas daftar kursus) --- */
+        const pillsEl = document.getElementById('filterPills');
+        const catPills = cats.map(cat => `
+            <button class="pill" data-cat="${cat}" onclick="filterByCat('${cat}', this)">
+                ${CAT_EMOJI[cat] ?? '📌'} ${cat}
+            </button>`).join('');
+        /* Pertahankan tombol "Semua" yang sudah ada, tambah kategori */
+        pillsEl.innerHTML = `
+            <button class="pill active" data-cat="all" onclick="filterByCat('all', this)">Semua</button>
+            ${catPills}`;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * RENDER COURSES
+     * ═══════════════════════════════════════════════════════ */
+    function renderCourses() {
+        const grid = document.getElementById('coursesGrid');
+
+        if (filteredCourses.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="es-icon">🔍</div>
+                    <p>Tidak ada kursus yang cocok dengan pencarianmu.</p>
+                </div>`;
+            return;
+        }
+
+        grid.innerHTML = filteredCourses.map(c => {
+            const bg         = GRADIENTS[(c.id ?? 0) % GRADIENTS.length];
+            const isFree     = !c.price || c.price === 0;
+            const priceText  = isFree ? 'Gratis' : 'Rp ' + Number(c.price).toLocaleString('id-ID');
+            const instName   = c.instructorName ?? c.instructor?.name ?? 'Instruktur';
+            const rating     = c.rating ? `★ ${c.rating}` : '★ Baru';
+            const title      = c.title ?? c.name ?? 'Judul Kursus';
+            const category   = c.category ?? 'Umum';
+            const emoji      = CAT_EMOJI[category] ?? CAT_EMOJI.default;
+
+            return `
+            <div class="course-card">
+                <div class="course-thumb">
+                    <div class="ct-bg" style="background:${bg}">${emoji}</div>
+                    <div class="ct-overlay"><span>Lihat Kursus</span></div>
+                </div>
+                <div class="course-body">
+                    <span class="c-cat">${category}</span>
+                    <div class="c-title">${title}</div>
+                    <div class="c-instructor">👨‍🏫 ${instName}</div>
+                    <div class="c-footer">
+                        <div class="c-rating">${rating}</div>
+                        <div class="c-price ${isFree ? 'free' : ''}">${priceText}</div>
+                    </div>
+                    <button class="enroll-btn" onclick="handleEnroll(${c.id}, this)">
+                        Enroll Sekarang
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * ENROLL
+     * ═══════════════════════════════════════════════════════ */
+    async function handleEnroll(id, btn) {
+        if (!Auth.isLoggedIn()) {
+            showToast('Silakan login terlebih dahulu!', 'error');
+            setTimeout(() => window.location.href = 'login.html', 1200);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Memproses...';
+
+        try {
+            await API.enroll(id);
+            btn.textContent = '✓ Terdaftar';
+            btn.classList.add('enrolled');
+            showToast('Berhasil mendaftar kursus! 🎉', 'success');
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Enroll Sekarang';
+            showToast(err.message || 'Gagal mendaftar atau sudah terdaftar.', 'error');
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * FILTER & SORT
+     * FIX #1: Satu fungsi filterByCat menangani SEMUA filter
+     *         (menggantikan filterCat yang tidak ada sebelumnya)
+     * ═══════════════════════════════════════════════════════ */
+    function filterByCat(cat, btnEl) {
+        activeCat = cat;
+
+        /* Update pill active state */
+        document.querySelectorAll('#filterPills .pill').forEach(p => {
+            p.classList.toggle('active', p.dataset.cat === cat);
+        });
+
+        /* Scroll ke section kursus jika klik dari cat-card */
+        if (!btnEl) {
+            document.getElementById('courses').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        applyFilterSort();
+    }
+
+    /* FIX #2 & #3: sortCourses sekarang menangani semua opsi sort dengan benar */
+    function sortCourses(val) {
+        activeSort = val;
+        applyFilterSort();
+    }
+
+    function doSearch() {
+        activeCat = 'all';
+        /* Reset active pill ke "Semua" */
+        document.querySelectorAll('#filterPills .pill').forEach(p => {
+            p.classList.toggle('active', p.dataset.cat === 'all');
+        });
+        applyFilterSort();
+    }
+
+    function applyFilterSort() {
+        let arr = [...allCourses];
+        const q = document.getElementById('heroSearch').value.trim().toLowerCase();
+
+        /* Filter kategori */
+        if (activeCat !== 'all') {
+            arr = arr.filter(c => c.category === activeCat);
+        }
+
+        /* Filter pencarian */
+        if (q) {
+            arr = arr.filter(c =>
+                (c.title ?? c.name ?? '').toLowerCase().includes(q) ||
+                (c.category ?? '').toLowerCase().includes(q) ||
+                (c.instructorName ?? c.instructor?.name ?? '').toLowerCase().includes(q)
+            );
+        }
+
+        /* FIX #3: Sort — semua opsi kini dihandle */
+        switch (activeSort) {
+            case 'price_asc':
+                arr.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+                break;
+            case 'popular':
+                arr.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+                break;
+            case 'newest':
+            default:
+                /* Asumsi id lebih besar = lebih baru */
+                arr.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+                break;
+        }
+
+        filteredCourses = arr;
+        renderCourses();
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * TOAST
+     * ═══════════════════════════════════════════════════════ */
+    function showToast(msg, type = '') {
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        el.textContent = msg;
+        document.getElementById('toast-container').appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+     * INIT
+     * ═══════════════════════════════════════════════════════ */
+    renderNavbar();
+    loadCourses();
+    /* Reveal elemen statis (hero, heading) langsung */
+    initReveal();
+</script>
+</body>
+</html>

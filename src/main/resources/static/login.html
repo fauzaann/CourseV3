@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masuk — LearnHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ink: #09090B;
+            --ink-2: #3F3F46;
+            --ink-3: #71717A;
+            --ink-4: #A1A1AA;
+            --ink-5: #D4D4D8;
+            --surface: #FAFAFA;
+            --surface-2: #F4F4F5;
+            --white: #FFFFFF;
+            --blue: #2563EB;
+            --blue-dark: #1D4ED8;
+            --blue-soft: #EFF6FF;
+            --blue-mid: #DBEAFE;
+            --emerald: #10B981;
+            --rose: #F43F5E;
+            --violet: #7C3AED;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+            --shadow: 0 4px 20px rgba(0,0,0,.07);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,.12);
+            --shadow-blue: 0 8px 32px rgba(37,99,235,.25);
+            --r: 14px;
+            --r-sm: 8px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #05091A;
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background blobs */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            animation: blobFloat 8s ease-in-out infinite;
+        }
+        .bg-blob-1 { width: 500px; height: 500px; background: rgba(37,99,235,.2); top: -150px; left: -100px; }
+        .bg-blob-2 { width: 400px; height: 400px; background: rgba(124,58,237,.15); bottom: -100px; right: -80px; animation-delay: -3s; }
+        .bg-grid {
+            position: fixed; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        @keyframes blobFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-24px) scale(1.04); }
+        }
+
+        /* Card */
+        .login-card {
+            position: relative;
+            z-index: 10;
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            animation: fadeUp .6s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Brand */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 40px; height: 40px;
+            background: var(--blue);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800; color: #fff; font-size: 1.15rem;
+            box-shadow: 0 3px 10px rgba(37,99,235,.35);
+        }
+
+        .brand-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800; font-size: 1.2rem;
+            letter-spacing: -.02em; color: var(--ink);
+        }
+
+        /* Heading */
+        .login-heading {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.65rem; font-weight: 800;
+            letter-spacing: -.025em;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .login-sub {
+            font-size: .9rem; color: var(--ink-3);
+            margin-bottom: 28px;
+        }
+
+        /* Form */
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            font-size: .83rem; font-weight: 600;
+            color: var(--ink-2);
+            margin-bottom: 7px;
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute; left: 14px;
+            color: var(--ink-4); font-size: 1rem;
+            pointer-events: none;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            border: 1.5px solid var(--ink-5);
+            border-radius: var(--r-sm);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .9rem;
+            color: var(--ink);
+            background: var(--surface);
+            outline: none;
+            transition: border .18s, box-shadow .18s;
+        }
+
+        input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+            background: var(--white);
+        }
+
+        input.error-input { border-color: var(--rose); }
+        input.error-input:focus { box-shadow: 0 0 0 3px rgba(244,63,94,.1); }
+
+        .toggle-pw {
+            position: absolute; right: 12px;
+            background: none; border: none;
+            color: var(--ink-4); cursor: pointer;
+            font-size: .95rem; padding: 4px;
+            transition: color .15s;
+        }
+
+        .toggle-pw:hover { color: var(--ink-2); }
+
+        /* Error message */
+        .field-error {
+            font-size: .78rem; color: var(--rose);
+            margin-top: 5px;
+            display: none;
+        }
+
+        .field-error.show { display: block; }
+
+        /* Alert banner */
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--r-sm);
+            font-size: .86rem; font-weight: 500;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert.show { display: flex; }
+        .alert.error { background: #FFF1F2; color: #9F1239; border: 1px solid #FECDD3; }
+        .alert.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+
+        /* Submit button */
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--r-sm);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .95rem; font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(37,99,235,.3);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background: var(--blue-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .btn-submit:disabled {
+            opacity: .65; cursor: not-allowed; transform: none;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2.5px solid rgba(255,255,255,.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: none;
+        }
+
+        .btn-submit.loading .spinner { display: block; }
+        .btn-submit.loading .btn-text { display: none; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Divider */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 20px 0;
+            color: var(--ink-4); font-size: .8rem;
+        }
+
+        .divider::before, .divider::after {
+            content: ''; flex: 1;
+            height: 1px; background: var(--ink-5);
+        }
+
+        /* Footer link */
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: .875rem; color: var(--ink-3);
+        }
+
+        .login-footer a {
+            color: var(--blue); font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover { text-decoration: underline; }
+
+        /* Role badge (tampil setelah login berhasil) */
+        .role-badge {
+            display: inline-block;
+            padding: 3px 12px; border-radius: 99px;
+            font-size: .75rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .04em;
+        }
+
+        .role-badge.ADMIN    { background: #FEE2E2; color: #9B1C1C; }
+        .role-badge.INSTRUCTOR { background: #FEF3C7; color: #92400E; }
+        .role-badge.STUDENT  { background: var(--blue-mid); color: var(--blue-dark); }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 28px 24px; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-blob bg-blob-1"></div>
+<div class="bg-blob bg-blob-2"></div>
+<div class="bg-grid"></div>
+
+<div class="login-card">
+    <a href="index.html" class="brand">
+        <div class="brand-icon">L</div>
+        <span class="brand-name">LearnHub</span>
+    </a>
+
+    <h1 class="login-heading">Selamat datang kembali</h1>
+    <p class="login-sub">Masuk ke akun kamu untuk melanjutkan belajar.</p>
+
+    <!-- Alert banner untuk error/success -->
+    <div class="alert error" id="alertBox">
+        <span id="alertIcon">⚠️</span>
+        <span id="alertMsg"></span>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-wrap">
+                <span class="input-icon">✉️</span>
+                <input type="email" id="email" placeholder="kamu@email.com" autocomplete="email" />
+            </div>
+            <div class="field-error" id="emailErr">Masukkan email yang valid.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="password" placeholder="Password kamu" autocomplete="current-password" />
+                <button type="button" class="toggle-pw" onclick="togglePassword()" id="togglePwBtn" title="Tampilkan password">👁️</button>
+            </div>
+            <div class="field-error" id="passwordErr">Password tidak boleh kosong.</div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+            <div class="spinner"></div>
+            <span class="btn-text">Masuk Sekarang</span>
+        </button>
+    </form>
+
+    <div class="login-footer">
+        Belum punya akun? <a href="register.html">Daftar sekarang</a>
+    </div>
+</div>
+
+<script>
+    /* ═══════════════════════════════════════════════════
+     * KONFIGURASI
+     * Sesuaikan BASE_URL dengan backend Spring Boot kamu
+     * ═══════════════════════════════════════════════════ */
+    const BASE_URL = 'http://localhost:8080/api';
+
+    /* ═══════════════════════════════════════════════════
+     * AUTH HELPER — inline (tidak perlu file api.js eksternal)
+     * ═══════════════════════════════════════════════════ */
+    const Auth = {
+        save: (token, user) => {
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+        },
+        isLoggedIn: () => localStorage.getItem('token') !== null,
+        getUser: () => {
+            const u = localStorage.getItem('user');
+            return u ? JSON.parse(u) : null;
+        },
+        /* Redirect berdasarkan role setelah login */
+        redirectByRole: (role) => {
+            switch (role?.toUpperCase()) {
+                case 'ADMIN':
+                    window.location.href = 'dashboard-admin.html';
+                    break;
+                case 'INSTRUCTOR':
+                    window.location.href = 'dashboard-instructor.html';
+                    break;
+                case 'STUDENT':
+                default:
+                    window.location.href = 'index.html';
+                    break;
+            }
+        }
+    };
+
+    /* Jika sudah login, langsung redirect */
+    if (Auth.isLoggedIn()) {
+        const user = Auth.getUser();
+        Auth.redirectByRole(user?.role);
+    }
+
+    /* ═══════════════════════════════════════════════════
+     * UI HELPERS
+     * ═══════════════════════════════════════════════════ */
+    function showAlert(msg, type = 'error') {
+        const box = document.getElementById('alertBox');
+        const msgEl = document.getElementById('alertMsg');
+        const iconEl = document.getElementById('alertIcon');
+        msgEl.textContent = msg;
+        iconEl.textContent = type === 'error' ? '⚠️' : '✅';
+        box.className = `alert show ${type}`;
+    }
+
+    function hideAlert() {
+        document.getElementById('alertBox').classList.remove('show');
+    }
+
+    function setLoading(isLoading) {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = isLoading;
+        btn.classList.toggle('loading', isLoading);
+    }
+
+    function showFieldError(id, msg) {
+        const inp = document.getElementById(id);
+        const err = document.getElementById(id + 'Err');
+        inp.classList.add('error-input');
+        if (msg) err.textContent = msg;
+        err.classList.add('show');
+    }
+
+    function clearFieldErrors() {
+        ['email', 'password'].forEach(id => {
+            document.getElementById(id).classList.remove('error-input');
+            document.getElementById(id + 'Err').classList.remove('show');
+        });
+    }
+
+    function togglePassword() {
+        const inp = document.getElementById('password');
+        const btn = document.getElementById('togglePwBtn');
+        const isHidden = inp.type === 'password';
+        inp.type = isHidden ? 'text' : 'password';
+        btn.textContent = isHidden ? '🙈' : '👁️';
+    }
+
+    /* ═══════════════════════════════════════════════════
+     * VALIDASI FORM
+     * ═══════════════════════════════════════════════════ */
+    function validateForm(email, password) {
+        let valid = true;
+        clearFieldErrors();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showFieldError('email', 'Masukkan email yang valid.');
+            valid = false;
+        }
+
+        if (!password || password.length < 1) {
+            showFieldError('password', 'Password tidak boleh kosong.');
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    /* ═══════════════════════════════════════════════════
+     * LOGIN HANDLER
+     * Endpoint: POST /api/auth/login
+     *
+     * Request body yang dikirim:
+     * { "email": "...", "password": "..." }
+     *
+     * Response yang diharapkan dari Spring Boot:
+     * {
+     *   "token": "eyJhbGci...",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "Budi",
+     *     "email": "budi@email.com",
+     *     "role": "INSTRUCTOR"   ← harus UPPERCASE
+     *   }
+     * }
+     *
+     * ⚠️  PENTING: Jika response Spring Boot kamu berbeda
+     *     (misal pakai "accessToken", "username", dll),
+     *     sesuaikan bagian "Petakan response" di bawah.
+     * ═══════════════════════════════════════════════════ */
+    async function handleLogin(e) {
+        e.preventDefault();
+        hideAlert();
+
+        const email    = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!validateForm(email, password)) return;
+
+        setLoading(true);
+
+        try {
+            const res = await fetch(`${BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            /* ── Baca body response ── */
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+                /* Tangkap pesan error dari Spring Boot */
+                const errMsg = data?.message
+                    ?? data?.error
+                    ?? (res.status === 401
+                        ? 'Email atau password salah.'
+                        : res.status === 403
+                            ? 'Akun kamu tidak memiliki akses.'
+                            : `Login gagal (${res.status}). Coba lagi.`);
+                showAlert(errMsg, 'error');
+                return;
+            }
+
+            if (!data) {
+                showAlert('Response dari server tidak valid. Hubungi admin.', 'error');
+                return;
+            }
+
+            /* ── Petakan response Spring Boot ke objek user ──
+             * Sesuaikan jika struktur response backend kamu berbeda!
+             * Contoh variasi umum:
+             *   data.accessToken   → ganti data.token
+             *   data.jwt           → ganti data.token
+             *   data.data.token    → jika dibungkus objek data
+             *   data.roles[0]      → jika role berupa array
+             */
+            const token = data.token ?? data.accessToken ?? data.jwt;
+
+            const user = {
+                id:    data.user?.id    ?? data.id,
+                name:  data.user?.name  ?? data.name  ?? data.username ?? email,
+                email: data.user?.email ?? data.email ?? email,
+                /* Normalisasi role ke UPPERCASE */
+                role: (data.user?.role ?? data.role ?? data.roles?.[0] ?? 'STUDENT')
+                    .toString()
+                    .toUpperCase()
+                    .replace('ROLE_', '') /* Hapus prefix "ROLE_" jika ada */
+            };
+
+            if (!token) {
+                showAlert('Token tidak diterima dari server. Cek konfigurasi backend.', 'error');
+                return;
+            }
+
+            /* ── Simpan ke localStorage ── */
+            Auth.save(token, user);
+
+            showAlert(`Login berhasil! Mengalihkan sebagai ${user.role}...`, 'success');
+
+            /* Redirect setelah 800ms */
+            setTimeout(() => Auth.redirectByRole(user.role), 800);
+
+        } catch (err) {
+            /* Ini terjadi jika server tidak bisa dihubungi sama sekali */
+            if (err.name === 'TypeError' && err.message.includes('fetch')) {
+                showAlert(
+                    'Tidak dapat terhubung ke server. Pastikan Spring Boot berjalan di port 8080.',
+                    'error'
+                );
+            } else {
+                showAlert(`Terjadi kesalahan: ${err.message}`, 'error');
+            }
+            console.error('Login error:', err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    /* Clear error saat user mulai mengetik */
+    ['email', 'password'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            document.getElementById(id).classList.remove('error-input');
+            document.getElementById(id + 'Err').classList.remove('show');
+            hideAlert();
+        });
+    });
+</script>
+</body>
+</html>

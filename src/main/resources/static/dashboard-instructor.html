@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard Instructor — LearnHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --bg:#F7F6F2;--white:#FFFFFF;--ink:#141414;--ink-2:#3D3D3D;--ink-3:#6B6B6B;
+            --border:#E4E2DC;--accent:#0D9488;--accent-dark:#0F766E;--accent-light:#F0FDFA;
+            --green:#16A34A;--green-light:#F0FDF4;--blue:#2563EB;--blue-light:#EEF3FF;
+            --amber:#D97706;--amber-light:#FFFBEB;--red:#DC2626;--red-light:#FEF2F2;
+            --purple:#7C3AED;--purple-light:#F5F3FF;
+            --sidebar-w:260px;--header-h:68px;
+            --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow:0 4px 16px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.14);
+            --r:12px;--r-sm:8px;--r-lg:18px;--ease:cubic-bezier(.22,1,.36,1);--t:.18s;
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Satoshi',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+        h1,h2,h3,h4{font-family:'Clash Display',sans-serif;line-height:1.2}
+        a{color:inherit;text-decoration:none}
+        button{cursor:pointer;font-family:inherit;border:none;background:none}
+        input,select,textarea{font-family:inherit}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+        .hidden{display:none!important}
+
+        /* SIDEBAR */
+        .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:#0D1B1A;color:#fff;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+        .sb-top{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.07)}
+        .sb-brand{display:flex;align-items:center;gap:10px}
+        .sb-logo{width:34px;height:34px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Clash Display',sans-serif;font-weight:700;font-size:.9rem;color:#fff;flex-shrink:0}
+        .sb-brand-name{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.05rem;color:#fff}
+        .sb-nav{flex:1;padding:14px 12px}
+        .sb-section{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:12px 10px 5px}
+        .sb-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r-sm);color:rgba(255,255,255,.55);font-size:.875rem;font-weight:500;transition:all var(--t) var(--ease);cursor:pointer;width:100%;text-align:left;position:relative}
+        .sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+        .sb-item.active{background:rgba(13,148,136,.25);color:#5EEAD4;font-weight:600}
+        .sb-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:55%;background:var(--accent);border-radius:0 3px 3px 0}
+        .sb-footer{padding:14px 12px;border-top:1px solid rgba(255,255,255,.07)}
+
+        /* MAIN */
+        .main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+
+        /* HEADER */
+        .header{position:sticky;top:0;z-index:50;height:var(--header-h);background:rgba(247,246,242,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .header-title{font-family:'Clash Display',sans-serif;font-size:1rem;font-weight:700}
+        .header-right{display:flex;align-items:center;gap:12px;position:relative}
+
+        /* Profile */
+        .profile-btn{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 6px;border-radius:99px;background:var(--white);border:1.5px solid var(--border);cursor:pointer;transition:all var(--t);user-select:none}
+        .profile-btn:hover{border-color:var(--ink);box-shadow:var(--shadow-sm)}
+        .profile-btn.open{border-color:var(--accent);box-shadow:0 0 0 3px rgba(13,148,136,.12)}
+        .profile-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0284C7);display:flex;align-items:center;justify-content:center;font-family:'Clash Display',sans-serif;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0;overflow:hidden}
+        .profile-avatar img{width:100%;height:100%;object-fit:cover}
+        .profile-name{font-size:.82rem;font-weight:700;color:var(--ink);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .profile-role{font-size:.68rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+        .profile-chevron{color:var(--ink-3);transition:transform var(--t);flex-shrink:0}
+        .profile-btn.open .profile-chevron{transform:rotate(180deg)}
+
+        /* Dropdown */
+        .profile-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:240px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-lg);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.97);transform-origin:top right;transition:all .2s var(--ease);z-index:200}
+        .profile-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+        .pd-header{padding:16px 18px;background:linear-gradient(135deg,var(--accent-light),#EFF6FF);border-bottom:1px solid var(--border)}
+        .pd-name{font-family:'Clash Display',sans-serif;font-weight:700;font-size:.95rem}
+        .pd-email{font-size:.75rem;color:var(--ink-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .pd-item{display:flex;align-items:center;gap:11px;padding:12px 18px;font-size:.875rem;font-weight:500;color:var(--ink-2);transition:background var(--t);cursor:pointer;width:100%;text-align:left}
+        .pd-item:hover{background:var(--bg);color:var(--ink)}
+        .pd-item svg{color:var(--ink-3);flex-shrink:0}
+        .pd-item:hover svg{color:var(--accent)}
+        .pd-sep{height:1px;background:var(--border);margin:4px 0}
+        .pd-item.danger{color:var(--red)}
+        .pd-item.danger svg{color:var(--red)}
+        .pd-item.danger:hover{background:var(--red-light)}
+
+        /* PAGE */
+        .page-body{padding:28px 32px;flex:1}
+
+        /* WELCOME BANNER */
+        .welcome-banner{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 50%,#0284C7 100%);border-radius:var(--r-lg);padding:28px 32px;color:#fff;position:relative;overflow:hidden;margin-bottom:28px}
+        .welcome-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.07)}
+        .welcome-banner::after{content:'';position:absolute;bottom:-60px;right:60px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.05)}
+        .wb-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:6px}
+        .wb-title{font-family:'Clash Display',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:8px}
+        .wb-sub{font-size:.875rem;opacity:.8}
+        .wb-stats{display:flex;gap:28px;margin-top:20px}
+        .wb-stat-val{font-family:'Clash Display',sans-serif;font-size:1.5rem;font-weight:700}
+        .wb-stat-lbl{font-size:.7rem;opacity:.7;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+
+        /* STATS */
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+        .stat-card{background:var(--white);border-radius:var(--r);padding:20px 22px;border:1.5px solid var(--border);display:flex;align-items:center;gap:16px;transition:all var(--t) var(--ease)}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+        .stat-icon{width:46px;height:46px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+        .si-t{background:var(--accent-light)}.si-g{background:var(--green-light)}.si-b{background:var(--blue-light)}
+        .stat-lbl{font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+        .stat-val{font-family:'Clash Display',sans-serif;font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1}
+
+        /* CARD */
+        .card{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);overflow:hidden;margin-bottom:20px}
+        .card-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+        .card-head h3{font-family:'Clash Display',sans-serif;font-size:.95rem;font-weight:700}
+        .card-body{padding:22px}
+        .card-body-0{padding:0}
+
+        /* TABLE */
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse}
+        thead th{padding:11px 16px;text-align:left;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+        tbody td{padding:13px 16px;border-bottom:1px solid var(--bg);font-size:.875rem;vertical-align:middle}
+        tbody tr:last-child td{border-bottom:none}
+        tbody tr:hover{background:var(--bg)}
+        .td-actions{display:flex;gap:6px}
+
+        /* BADGE */
+        .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:.67rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+        .b-teal{background:var(--accent-light);color:var(--accent-dark)}
+        .b-blue{background:var(--blue-light);color:#1A47C4}
+        .b-green{background:var(--green-light);color:var(--green)}
+        .b-amber{background:var(--amber-light);color:var(--amber)}
+        .b-red{background:var(--red-light);color:var(--red)}
+        .b-gray{background:var(--border);color:var(--ink-3)}
+
+        /* SEARCH */
+        .search-wrap{position:relative;display:flex;align-items:center}
+        .search-wrap svg{position:absolute;left:11px;color:var(--ink-3)}
+        .search-input{padding:8px 14px 8px 34px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--bg);font-size:.82rem;color:var(--ink);outline:none;transition:all var(--t);width:200px}
+        .search-input:focus{border-color:var(--accent);background:var(--white);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+        .search-input::placeholder{color:var(--ink-3)}
+
+        /* BUTTONS */
+        .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--r-sm);border:none;font-size:.83rem;font-weight:600;transition:all var(--t) var(--ease);cursor:pointer;white-space:nowrap}
+        .btn-primary{background:var(--accent);color:#fff}
+        .btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(13,148,136,.3)}
+        .btn-ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--border)}
+        .btn-ghost:hover{border-color:var(--ink);color:var(--ink);background:var(--white)}
+        .btn-danger{background:var(--red);color:#fff}
+        .btn-danger:hover{background:#b91c1c}
+        .btn-sm{padding:6px 12px;font-size:.77rem}
+        .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+        .w-full{width:100%;justify-content:center}
+
+        /* MODAL */
+        .modal-backdrop{position:fixed;inset:0;z-index:300;background:rgba(20,20,20,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s}
+        .modal-backdrop.open{opacity:1;pointer-events:all}
+        .modal{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:transform .25s var(--ease)}
+        .modal-backdrop.open .modal{transform:translateY(0) scale(1)}
+        .modal-head{padding:24px 26px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .modal-head h3{font-family:'Clash Display',sans-serif;font-size:1.15rem;font-weight:700}
+        .modal-close{width:30px;height:30px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:1rem;cursor:pointer;transition:all var(--t);border:none}
+        .modal-close:hover{background:var(--border);color:var(--ink)}
+        .modal-body{padding:0 26px 26px}
+        .modal-avatar-section{display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg);border-radius:var(--r);margin-bottom:20px;border:1.5px solid var(--border)}
+        .modal-avatar-big{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0284C7);display:flex;align-items:center;justify-content:center;font-family:'Clash Display',sans-serif;font-weight:700;color:#fff;font-size:1.4rem;flex-shrink:0;overflow:hidden;position:relative;cursor:pointer}
+        .modal-avatar-big img{width:100%;height:100%;object-fit:cover}
+        .avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity var(--t);border-radius:50%}
+        .modal-avatar-big:hover .avatar-overlay{opacity:1}
+        .avatar-overlay svg{color:#fff}
+        .avatar-info p:first-child{font-weight:600;font-size:.9rem}
+        .avatar-info p:last-child{font-size:.78rem;color:var(--ink-3);margin-top:2px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-size:.75rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+        .form-control{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--white);font-size:.9rem;color:var(--ink);outline:none;transition:all var(--t)}
+        .form-control:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+        .form-control::placeholder{color:var(--ink-3)}
+        .form-control:disabled{background:var(--bg);color:var(--ink-3);cursor:not-allowed}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+        /* COURSE FORM MODAL */
+        .modal-lg{max-width:580px}
+        #avatarInputInstr{display:none}
+
+        /* TOAST */
+        #toast-zone{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px}
+        .toast{display:flex;align-items:center;gap:10px;padding:13px 18px;border-radius:var(--r-sm);font-size:.84rem;font-weight:600;box-shadow:var(--shadow-lg);min-width:250px;animation:toastIn .25s var(--ease)}
+        .toast.ok{background:#0D1B1A;color:#fff}.toast.err{background:var(--red);color:#fff}
+        @keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+        .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+        .spinner-dark{border-color:var(--border);border-top-color:var(--accent)}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-row{text-align:center;padding:40px!important;color:var(--ink-3)}
+        .empty-state{text-align:center;padding:48px;color:var(--ink-3)}
+        .empty-state .ei{font-size:2.5rem;margin-bottom:10px}
+
+        @media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.page-body{padding:20px 16px}.header{padding:0 16px}}
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sb-top">
+        <div class="sb-brand">
+            <div class="sb-logo">L</div>
+            <span class="sb-brand-name">LearnHub</span>
+        </div>
+    </div>
+    <nav class="sb-nav">
+        <div class="sb-section">Menu</div>
+        <button class="sb-item active" onclick="showTab('overview')">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Overview
+        </button>
+        <button class="sb-item" onclick="showTab('courses')">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Kursus Saya
+        </button>
+        <button class="sb-item" onclick="showTab('students')">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Data Student
+        </button>
+    </nav>
+    <div class="sb-footer">
+        <button class="sb-item" onclick="doLogout()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Keluar
+        </button>
+    </div>
+</aside>
+
+<div class="main">
+    <header class="header">
+        <div class="header-title" id="pageTitle">Overview</div>
+        <div class="header-right">
+            <div class="profile-btn" id="profileBtn" onclick="toggleDropdown()">
+                <div class="profile-avatar" id="headerAvatar">I</div>
+                <div>
+                    <div class="profile-name" id="profileName">Instructor</div>
+                    <div class="profile-role">Instructor</div>
+                </div>
+                <svg class="profile-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="pd-header">
+                    <div class="pd-name" id="dropName">Instructor</div>
+                    <div class="pd-email" id="dropEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d3babda0a7a1a6b0a7bca193b6beb2babffdb0bcbe">[email&#160;protected]</a></div>
+                </div>
+                <button class="pd-item" onclick="openEditProfile();closeDropdown()">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Lihat & Edit Profil
+                </button>
+                <div class="pd-sep"></div>
+                <button class="pd-item danger" onclick="doLogout()">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-body">
+
+        <!-- OVERVIEW -->
+        <div id="tab-overview">
+            <div class="welcome-banner">
+                <div class="wb-label">Dashboard Instructor</div>
+                <div class="wb-title" id="bannerName">Hai, Instructor! 👋</div>
+                <div class="wb-sub">Kelola kursus dan pantau perkembangan studentmu.</div>
+                <div class="wb-stats">
+                    <div class="wb-stat"><div class="wb-stat-val" id="wbCourses">—</div><div class="wb-stat-lbl">Total Kursus</div></div>
+                    <div class="wb-stat"><div class="wb-stat-val" id="wbStudents">—</div><div class="wb-stat-lbl">Total Student</div></div>
+                    <div class="wb-stat"><div class="wb-stat-val" id="wbPublished">—</div><div class="wb-stat-lbl">Published</div></div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card"><div class="stat-icon si-t">📚</div><div><div class="stat-lbl">Total Kursus</div><div class="stat-val" id="sCourses">—</div></div></div>
+                <div class="stat-card"><div class="stat-icon si-g">👥</div><div><div class="stat-lbl">Total Student</div><div class="stat-val" id="sStudents">—</div></div></div>
+                <div class="stat-card"><div class="stat-icon si-b">✅</div><div><div class="stat-lbl">Kursus Published</div><div class="stat-val" id="sPublished">—</div></div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-head"><h3>Kursus Terbaru</h3><button class="btn btn-primary btn-sm" onclick="openCourseForm()">+ Buat Kursus</button></div>
+                <div class="card-body-0">
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Judul</th><th>Kategori</th><th>Level</th><th>Student</th><th>Status</th><th>Aksi</th></tr></thead>
+                            <tbody id="overviewCoursesBody"><tr><td colspan="6" class="loading-row"><div class="spinner spinner-dark" style="margin:0 auto"></div></td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY COURSES -->
+        <div id="tab-courses" class="hidden">
+            <div class="card" style="margin-bottom:0">
+                <div class="card-head">
+                    <h3>Kursus Saya</h3>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                        <div class="search-wrap">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" class="search-input" id="courseSearch" placeholder="Cari kursus..." oninput="filterCourses()"/>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="openCourseForm()">+ Buat Kursus</button>
+                    </div>
+                </div>
+                <div class="card-body-0">
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Judul</th><th>Kategori</th><th>Level</th><th>Student</th><th>Status</th><th>Aksi</th></tr></thead>
+                            <tbody id="coursesBody"><tr><td colspan="6" class="loading-row"><div class="spinner spinner-dark" style="margin:0 auto"></div></td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div id="tab-students" class="hidden">
+            <div class="card" style="margin-bottom:0">
+                <div class="card-head"><h3>Data Student</h3></div>
+                <div class="card-body-0">
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Student</th><th>Kursus</th><th>Progress</th><th>Tanggal Daftar</th><th>Status</th></tr></thead>
+                            <tbody id="studentsBody"><tr><td colspan="5" class="loading-row"><div class="spinner spinner-dark" style="margin:0 auto"></div></td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL EDIT PROFIL -->
+<div class="modal-backdrop" id="editProfileModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Edit Profil</h3>
+            <button class="modal-close" onclick="closeEditProfile()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-avatar-section">
+                <div class="modal-avatar-big" id="modalAvatarBig" onclick="document.getElementById('avatarInputInstr').click()">
+                    <span id="modalAvatarLetter">I</span>
+                    <div class="avatar-overlay"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+                </div>
+                <div class="avatar-info">
+                    <p id="modalAvatarName">Instructor</p>
+                    <p>Klik foto untuk mengubah gambar profil</p>
+                </div>
+            </div>
+            <input type="file" id="avatarInputInstr" accept="image/*" onchange="previewAvatar(event)"/>
+            <div class="form-row">
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" class="form-control" id="editFullName" placeholder="Nama lengkap"/></div>
+                <div class="form-group"><label>Email</label><input type="email" class="form-control" id="editEmail" disabled/></div>
+            </div>
+            <div class="form-group"><label>Bio</label><textarea class="form-control" id="editBio" rows="3" placeholder="Ceritakan pengalamanmu sebagai instruktur..."></textarea></div>
+            <div class="form-group"><label>Role</label><input type="text" class="form-control" id="editRole" disabled/></div>
+            <button class="btn btn-primary w-full" onclick="saveProfile()">Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BUAT/EDIT KURSUS -->
+<div class="modal-backdrop" id="courseModal">
+    <div class="modal modal-lg">
+        <div class="modal-head">
+            <h3 id="courseModalTitle">Buat Kursus Baru</h3>
+            <button class="modal-close" onclick="closeCourseModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="courseId"/>
+            <div class="form-group"><label>Judul Kursus</label><input type="text" class="form-control" id="courseTitle" placeholder="Judul kursus yang menarik..."/></div>
+            <div class="form-group"><label>Deskripsi</label><textarea class="form-control" id="courseDesc" rows="3" placeholder="Deskripsi kursus..."></textarea></div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select class="form-control" id="courseCategory">
+                        <option value="">Pilih kategori</option>
+                        <option>Programming</option><option>Design</option><option>Business</option>
+                        <option>Marketing</option><option>Data Science</option><option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Level</label>
+                    <select class="form-control" id="courseLevel">
+                        <option value="">Pilih level</option>
+                        <option value="BEGINNER">Beginner</option>
+                        <option value="INTERMEDIATE">Intermediate</option>
+                        <option value="ADVANCE">Advanced</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Harga (Rp)</label><input type="number" class="form-control" id="coursePrice" placeholder="0 untuk gratis"/></div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" id="courseStatus">
+                        <option value="DRAFT">Draft</option>
+                        <option value="PUBLISHED">Published</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary w-full" onclick="saveCourse()">Simpan Kursus</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast-zone"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    const BASE = 'http://localhost:8080/api';
+    const Auth = {
+        token: () => localStorage.getItem('token'),
+        user:  () => { try { return JSON.parse(localStorage.getItem('user')) } catch { return null } },
+        role:  () => Auth.user()?.role ?? null,
+        clear: () => { localStorage.removeItem('token'); localStorage.removeItem('user') },
+        save:  (u) => localStorage.setItem('user', JSON.stringify(u)),
+    };
+    if (!Auth.token()) { location.href='login.html' }
+    if (Auth.role() !== 'INSTRUCTOR') {
+        const r=Auth.role();
+        location.href=r==='ADMIN'?'dashboard-admin.html':r==='STUDENT'?'dashboard-student.html':'index.html';
+    }
+    let currentUser = Auth.user();
+    function fillUI() {
+        const name = currentUser?.fullName??currentUser?.name??'Instructor';
+        const email = currentUser?.email??'';
+        document.getElementById('profileName').textContent = name;
+        document.getElementById('headerAvatar').textContent = name[0].toUpperCase();
+        document.getElementById('dropName').textContent = name;
+        document.getElementById('dropEmail').textContent = email;
+        document.getElementById('bannerName').textContent = `Hai, ${name.split(' ')[0]}! 👋`;
+    }
+    fillUI();
+
+    async function req(method, path, body) {
+        const h={'Content-Type':'application/json'};
+        if(Auth.token()) h['Authorization']=`Bearer ${Auth.token()}`;
+        const r=await fetch(BASE+path,{method,headers:h,body:body?JSON.stringify(body):undefined});
+        if(r.status===401){Auth.clear();location.href='login.html';return}
+        const ct=r.headers.get('content-type')??'';
+        const data=ct.includes('json')?await r.json():await r.text();
+        if(!r.ok) throw{status:r.status,message:data?.message??data??'Error'};
+        return data;
+    }
+
+    let allCourses=[], allEnrollments=[];
+
+    const TABS=['overview','courses','students'];
+    const TITLES={overview:'Overview',courses:'Kursus Saya',students:'Data Student'};
+    function showTab(name) {
+        TABS.forEach(t=>document.getElementById('tab-'+t).classList.toggle('hidden',t!==name));
+        document.querySelectorAll('.sb-item').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')?.includes(`'${name}'`)));
+        document.getElementById('pageTitle').textContent=TITLES[name];
+        if(name==='courses'&&!allCourses.length) loadCourses();
+        if(name==='students'&&!allEnrollments.length) loadStudents();
+    }
+
+    /* PROFILE DROPDOWN */
+    function toggleDropdown(){
+        const btn=document.getElementById('profileBtn'),dd=document.getElementById('profileDropdown');
+        const open=dd.classList.contains('open');
+        btn.classList.toggle('open',!open);dd.classList.toggle('open',!open);
+    }
+    function closeDropdown(){document.getElementById('profileBtn').classList.remove('open');document.getElementById('profileDropdown').classList.remove('open')}
+    document.addEventListener('click',e=>{if(!e.target.closest('#profileBtn')&&!e.target.closest('#profileDropdown'))closeDropdown()});
+
+    /* EDIT PROFILE */
+    function openEditProfile(){
+        const name=currentUser?.fullName??currentUser?.name??'';
+        document.getElementById('editFullName').value=name;
+        document.getElementById('editEmail').value=currentUser?.email??'';
+        document.getElementById('editBio').value=currentUser?.bio??'';
+        document.getElementById('editRole').value=currentUser?.role??'';
+        document.getElementById('modalAvatarLetter').textContent=name[0]?.toUpperCase()??'I';
+        document.getElementById('modalAvatarName').textContent=name;
+        document.getElementById('editProfileModal').classList.add('open');
+    }
+    function closeEditProfile(){document.getElementById('editProfileModal').classList.remove('open')}
+    document.getElementById('editProfileModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEditProfile()});
+
+    function previewAvatar(e){
+        const file=e.target.files[0];if(!file)return;
+        const reader=new FileReader();
+        reader.onload=ev=>{
+            const big=document.getElementById('modalAvatarBig');
+            let img=big.querySelector('img');
+            if(!img){img=document.createElement('img');big.insertBefore(img,big.firstChild);document.getElementById('modalAvatarLetter').style.display='none'}
+            img.src=ev.target.result;
+            document.getElementById('headerAvatar').innerHTML=`<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        };
+        reader.readAsDataURL(file);
+    }
+    async function saveProfile(){
+        const fullName=document.getElementById('editFullName').value.trim();
+        const bio=document.getElementById('editBio').value.trim();
+        if(!fullName){toast('Nama tidak boleh kosong','err');return}
+        currentUser={...currentUser,fullName,bio};
+        Auth.save(currentUser);fillUI();
+        toast('Profil berhasil diperbarui!','ok');closeEditProfile();
+    }
+
+    /* OVERVIEW */
+    async function loadOverview(){
+        try {
+            // Ambil semua kursus lalu filter berdasarkan instructor yang login
+            const all = norm(await req('GET','/courses'));
+            const myId = currentUser?.id;
+            allCourses = all.filter(c =>
+                c.instructorId === myId ||
+                c.instructor?.id === myId ||
+                (c.instructorName ?? c.instructor?.fullName ?? c.instructor?.name ?? '')
+                    .toLowerCase() === (currentUser?.fullName ?? currentUser?.name ?? '').toLowerCase()
+            );
+            // Jika tidak ada yang cocok (misal field berbeda), tampilkan semua
+            if (!allCourses.length && myId) allCourses = all;
+
+            const totalStudents=allCourses.reduce((s,c)=>s+(c.totalStudents??0),0);
+            const published=allCourses.filter(c=>c.status==='PUBLISHED').length;
+            ['wbCourses','sCourses'].forEach(id=>document.getElementById(id).textContent=allCourses.length);
+            ['wbStudents','sStudents'].forEach(id=>document.getElementById(id).textContent=totalStudents);
+            ['wbPublished','sPublished'].forEach(id=>document.getElementById(id).textContent=published);
+            renderCourseTable('overviewCoursesBody', allCourses.slice(0,5));
+        } catch(e){toast('Gagal memuat overview: '+e.message,'err')}
+    }
+
+    /* COURSES */
+    const LVL_BADGE={BEGINNER:'b-green',INTERMEDIATE:'b-amber',ADVANCE:'b-red',ADVANCED:'b-red'};
+    const STS_BADGE={PUBLISHED:'b-teal',DRAFT:'b-gray',ARCHIVED:'b-red'};
+
+    async function loadCourses(){
+        document.getElementById('coursesBody').innerHTML=`<tr><td colspan="6" class="loading-row"><div class="spinner spinner-dark" style="margin:0 auto"></div></td></tr>`;
+        try{
+            if(!allCourses.length) await loadOverview();
+            renderCourseTable('coursesBody',allCourses);
+        } catch(e){document.getElementById('coursesBody').innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--red)">⚠️ ${esc(e.message)}</td></tr>`}
+    }
+
+    function renderCourseTable(tbodyId, list){
+        document.getElementById(tbodyId).innerHTML = list.length
+            ? list.map(c=>`<tr>
+        <td style="font-weight:600">${esc(c.title??'—')}</td>
+        <td>${c.category?`<span class="badge b-blue">${c.category}</span>`:'—'}</td>
+        <td>${c.level?`<span class="badge ${LVL_BADGE[c.level]??'b-gray'}">${c.level}</span>`:'—'}</td>
+        <td style="font-weight:600">${c.totalStudents??0}</td>
+        <td>${c.status?`<span class="badge ${STS_BADGE[c.status]??'b-gray'}">${c.status}</span>`:'—'}</td>
+        <td class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openCourseForm(${c.id})">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCourse(${c.id},this)">Hapus</button>
+        </td>
+      </tr>`).join('')
+            : `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--ink-3)">Belum ada kursus</td></tr>`;
+    }
+
+    function filterCourses(){
+        const q=document.getElementById('courseSearch').value.toLowerCase();
+        renderCourseTable('coursesBody',allCourses.filter(c=>(c.title??'').toLowerCase().includes(q)||(c.category??'').toLowerCase().includes(q)));
+    }
+
+    /* COURSE FORM */
+    function openCourseForm(id=null){
+        const c = id ? allCourses.find(x=>x.id===id) : null;
+        document.getElementById('courseModalTitle').textContent = c ? 'Edit Kursus' : 'Buat Kursus Baru';
+        document.getElementById('courseId').value      = c?.id ?? '';
+        document.getElementById('courseTitle').value   = c?.title ?? '';
+        document.getElementById('courseDesc').value    = c?.description ?? '';
+        document.getElementById('courseCategory').value= c?.category ?? '';
+        document.getElementById('courseLevel').value   = c?.level ?? '';
+        document.getElementById('coursePrice').value   = c?.price ?? '';
+        document.getElementById('courseStatus').value  = c?.status ?? 'DRAFT';
+        document.getElementById('courseModal').classList.add('open');
+    }
+    function closeCourseModal(){document.getElementById('courseModal').classList.remove('open')}
+    document.getElementById('courseModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCourseModal()});
+
+    async function saveCourse(){
+        const id=document.getElementById('courseId').value;
+        const payload={
+            title:document.getElementById('courseTitle').value.trim(),
+            description:document.getElementById('courseDesc').value.trim(),
+            category:document.getElementById('courseCategory').value,
+            level:document.getElementById('courseLevel').value,
+            price:parseFloat(document.getElementById('coursePrice').value)||0,
+            status:document.getElementById('courseStatus').value,
+        };
+        if(!payload.title){toast('Judul tidak boleh kosong','err');return}
+        try{
+            if(id) await req('PUT',`/courses/${id}`,payload);
+            else   await req('POST','/courses',payload);
+            toast(id?'Kursus diperbarui!':'Kursus berhasil dibuat!','ok');
+            closeCourseModal(); allCourses=[]; loadOverview();
+            if(!document.getElementById('tab-courses').classList.contains('hidden')) loadCourses();
+        } catch(e){toast(e.message,'err')}
+    }
+
+    async function deleteCourse(id,btn){
+        if(!confirm('Yakin hapus kursus ini?'))return;
+        btn.disabled=true;
+        try{await req('DELETE',`/courses/${id}`);toast('Kursus dihapus','ok');allCourses=[];loadOverview();loadCourses()}
+        catch(e){toast(e.message,'err');btn.disabled=false}
+    }
+
+    /* STUDENTS */
+    async function loadStudents(){
+        document.getElementById('studentsBody').innerHTML=`<tr><td colspan="5" class="loading-row"><div class="spinner spinner-dark" style="margin:0 auto"></div></td></tr>`;
+        try{
+            const allEnr=norm(await req('GET','/enrollments'));
+            if(!allCourses.length) await loadOverview();
+            const myCourseIds=new Set(allCourses.map(c=>c.id));
+            allEnrollments=myCourseIds.size>0?allEnr.filter(e=>myCourseIds.has(e.courseId??e.course?.id)):allEnr;
+            document.getElementById('studentsBody').innerHTML=allEnrollments.length
+                ? allEnrollments.map(e=>{
+                    const pct=e.progressPercent??0;
+                    const status=pct>=100?['SELESAI','b-teal']:pct>0?['ON GOING','b-blue']:['BELUM MULAI','b-gray'];
+                    return `<tr>
+            <td style="font-weight:600">${esc(e.studentName??e.student?.fullName??'—')}</td>
+            <td>${esc(e.courseName??e.course?.title??'—')}</td>
+            <td style="min-width:130px">
+              <div style="height:5px;border-radius:99px;background:var(--border);overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--accent);border-radius:99px"></div></div>
+              <div style="font-size:.7rem;color:var(--accent);font-weight:700;margin-top:3px">${pct}%</div>
+            </td>
+            <td style="color:var(--ink-3)">${e.enrolledAt?new Date(e.enrolledAt).toLocaleDateString('id-ID'):'—'}</td>
+            <td><span class="badge ${status[1]}">${status[0]}</span></td>
+          </tr>`;
+                }).join('')
+                : `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--ink-3)">Belum ada student</td></tr>`;
+        } catch(e){document.getElementById('studentsBody').innerHTML=`<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--red)">⚠️ ${esc(e.message)}</td></tr>`}
+    }
+
+    function norm(d){if(!d)return[];return Array.isArray(d)?d:(d.content??[])}
+    function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+    function toast(msg,type='ok'){const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;document.getElementById('toast-zone').appendChild(el);setTimeout(()=>el.remove(),3500)}
+    function doLogout(){Auth.clear();location.href='login.html'}
+
+    loadOverview();
+</script>
+</body>
+</html>
