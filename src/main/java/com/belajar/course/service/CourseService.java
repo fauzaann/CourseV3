@@ -12,6 +12,7 @@ import com.belajar.course.model.models.Module;
 import com.belajar.course.model.enums.CourseCategory;
 import com.belajar.course.model.enums.CourseLevel;
 import com.belajar.course.model.enums.CourseStatus;
+import com.belajar.course.model.enums.Role;
 import com.belajar.course.repository.CourseRepository;
 import com.belajar.course.repository.ModuleRepository;
 import com.belajar.course.util.SecurityUtil;
@@ -129,8 +130,7 @@ public class CourseService {
     }
 
     private void verifyInstructor(Course course) {
-        User currentUser = securityUtil.getCurrentUser();
-        if (!course.getInstructor().getId().equals(currentUser.getId()) && !securityUtil.hasRole("ADMIN")) {
+        if (!securityUtil.isOwner(course.getInstructor().getId()) && !securityUtil.hasRole(Role.ADMIN)) {
             throw new UnauthorizedException("Anda tidak memiliki akses ke course ini");
         }
     }
