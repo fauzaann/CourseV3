@@ -1,6 +1,7 @@
 package com.belajar.course.controller;
 
 import com.belajar.course.dto.ResponseDto.EnrollmentResponse;
+import com.belajar.course.dto.ResponseDto.LessonResponse;
 import com.belajar.course.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/enrollments")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class EnrollmentController {
 
     private final EnrollmentService enrollmentService;
@@ -30,6 +30,12 @@ public class EnrollmentController {
         return ResponseEntity.ok(enrollmentService.getMyEnrollments());
     }
 
+    @GetMapping("/instructor/my")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
+    public ResponseEntity<List<EnrollmentResponse>> getMyInstructorEnrollments() {
+        return ResponseEntity.ok(enrollmentService.getInstructorEnrollments());
+    }
+
     /* GET /api/enrollments — semua enrollment (admin only) ← TAMBAH INI */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -43,5 +49,12 @@ public class EnrollmentController {
             @PathVariable Long courseId,
             @PathVariable Long lessonId) {
         return ResponseEntity.ok(enrollmentService.markLessonComplete(courseId, lessonId));
+    }
+
+    @GetMapping("/{courseId}/lessons/{lessonId}")
+    public ResponseEntity<LessonResponse> getLesson(
+            @PathVariable Long courseId,
+            @PathVariable Long lessonId) {
+        return ResponseEntity.ok(enrollmentService.getLesson(courseId, lessonId));
     }
 }

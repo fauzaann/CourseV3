@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface LessonProgressRepository extends JpaRepository<LessonProgress, Long> {
     Optional<LessonProgress> findByEnrollmentIdAndLessonId(Long enrollmentId, Long lessonId);
+    boolean existsByEnrollmentIdAndLessonIdAndCompletedTrue(Long enrollmentId, Long lessonId);
     long countByEnrollmentIdAndCompletedTrue(Long enrollmentId);
 }

@@ -63,19 +63,43 @@ const API = {
     createCourse: (data) => request('POST', '/api/courses', data),
     updateCourse: (id, data) => request('PUT', `/api/courses/${id}`, data),
     deleteCourse: (id) => request('DELETE', `/api/courses/${id}`),
-    getMyCourses: () => request('GET', '/api/courses/my'),
+    getMyCourses: () => request('GET', '/api/courses/my-courses'),
+    searchCourses: (keyword, pageable = '') =>
+        request('GET', `/api/courses/search?keyword=${encodeURIComponent(keyword)}${pageable}`),
+    filterCourses: (category, level, pageable = '') =>
+        request('GET', `/api/courses/filter?${new URLSearchParams({
+            ...(category ? { category } : {}),
+            ...(level ? { level } : {})
+        })}${pageable}`),
+    addModule: (courseId, data) => request('POST', `/api/courses/${courseId}/modules`, data),
+    uploadThumbnail: async (courseId, file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch(`${BASE_URL}/api/courses/${courseId}/thumbnail`, {
+            method: 'POST',
+            headers: Auth.getToken() ? { 'Authorization': `Bearer ${Auth.getToken()}` } : {},
+            body: formData
+        });
+        if (!res.ok) {
+            const data = await res.text();
+            throw { status: res.status, message: data || 'Thumbnail upload failed' };
+        }
+    },
 
     // Enrollments
-    enroll: (courseId) => request('POST', '/api/enrollments', { courseId }),
+    enroll: (courseId) => request('POST', `/api/enrollments/${courseId}`),
     getMyEnrollments: () => request('GET', '/api/enrollments/my'),
+    getInstructorEnrollments: () => request('GET', '/api/enrollments/instructor/my'),
     getAllEnrollments: () => request('GET', '/api/enrollments'),
+    completeLesson: (courseId, lessonId) =>
+        request('POST', `/api/enrollments/${courseId}/lessons/${lessonId}/complete`),
+    getLesson: (courseId, lessonId) =>
+        request('GET', `/api/enrollments/${courseId}/lessons/${lessonId}`),
 
     // Quiz
-    getQuizzesByCourse: (courseId) => request('GET', `/api/quizzes/course/${courseId}`),
-    createQuiz: (data) => request('POST', '/api/quizzes', data),
-    updateQuiz: (id, data) => request('PUT', `/api/quizzes/${id}`, data),
-    deleteQuiz: (id) => request('DELETE', `/api/quizzes/${id}`),
-    submitQuiz: (data) => request('POST', '/api/quizzes/submit', data),
+    getQuizzesByCourse: (courseId) => request('GET', `/api/quizzes/courses/${courseId}`),
+    createQuiz: (courseId, data) => request('POST', `/api/quizzes/courses/${courseId}`, data),
+    submitQuiz: (quizId, data) => request('POST', `/api/quizzes/${quizId}/submit`, data),
 
     // Users (Admin)
     getAllUsers: () => request('GET', '/api/users'),

@@ -1,0 +1,13 @@
+batch:
+  status: completed
+  tasks:
+    - id: T001
+      status: done
+    - id: T002
+      status: done
+    - id: T003
+      status: done
+    - id: T004
+      status: done
+    - id: T005
+      status: done

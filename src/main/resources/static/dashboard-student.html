@@ -915,7 +915,7 @@
     async function enrollCourse(id, btn) {
         btn.disabled = true; btn.textContent = '...';
         try {
-            await req('POST', '/enrollments', { courseId: id });
+            await req('POST', `/enrollments/${id}`);
             toast('Berhasil mendaftar kursus!', 'ok');
             allEnrollments = []; // reset cache
             loadOverview();

@@ -29,13 +29,18 @@ public class SecurityUtil {
     public Authentication getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null
-                || !authentication.isAuthenticated()
-                || "anonymousUser".equals(authentication.getPrincipal())) {
+        if (!isAuthenticated()) {
             throw new UnauthorizedException("Anda harus login");
         }
 
         return authentication;
+    }
+
+    public boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getPrincipal());
     }
 
     public boolean hasRole(Role role) {

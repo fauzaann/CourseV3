@@ -14,6 +14,7 @@ import com.belajar.course.model.enums.CourseLevel;
 import com.belajar.course.model.enums.CourseStatus;
 import com.belajar.course.model.enums.Role;
 import com.belajar.course.repository.CourseRepository;
+import com.belajar.course.repository.EnrollmentRepository;
 import com.belajar.course.repository.ModuleRepository;
 import com.belajar.course.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final ModuleRepository moduleRepository;
+    private final EnrollmentRepository enrollmentRepository;
     private final FileStorageService fileStorageService;
     private final SecurityUtil securityUtil;
 
@@ -68,7 +70,8 @@ public class CourseService {
     }
 
     public CourseResponse getCourseById(Long id) {
-        return mapToCourseResponse(findCourseOrThrow(id));
+        Course course = findCourseOrThrow(id);
+        return mapToCourseResponse(course, canAccessLessons(course));
     }
 
     public Page<CourseSummaryResponse> getPublishedCourses(Pageable pageable) {
@@ -135,7 +138,25 @@ public class CourseService {
         }
     }
 
+    private boolean canAccessLessons(Course course) {
+        if (!securityUtil.isAuthenticated()) {
+            return false;
+        }
+
+        if (securityUtil.hasRole(Role.ADMIN)
+                || securityUtil.isOwner(course.getInstructor().getId())) {
+            return true;
+        }
+
+        User currentUser = securityUtil.getCurrentUser();
+        return enrollmentRepository.findByStudentAndCourse(currentUser, course).isPresent();
+    }
+
     private CourseResponse mapToCourseResponse(Course course) {
+        return mapToCourseResponse(course, true);
+    }
+
+    private CourseResponse mapToCourseResponse(Course course, boolean canAccessLessons) {
         return CourseResponse.builder()
                 .id(course.getId())
                 .title(course.getTitle())
@@ -151,7 +172,9 @@ public class CourseService {
                 .instructorName(course.getInstructor().getFullName())
                 .createdAt(course.getCreatedAt())
                 .modules(course.getModules() != null
-                        ? course.getModules().stream().map(this::mapToModuleResponse).collect(Collectors.toList())
+                        ? course.getModules().stream()
+                        .map(module -> mapToModuleResponse(module, canAccessLessons))
+                        .collect(Collectors.toList())
                         : List.of())
                 .build();
     }
@@ -171,6 +194,10 @@ public class CourseService {
     }
 
     private ModuleResponse mapToModuleResponse(Module module) {
+        return mapToModuleResponse(module, true);
+    }
+
+    private ModuleResponse mapToModuleResponse(Module module, boolean canAccessLessons) {
         return ModuleResponse.builder()
                 .id(module.getId())
                 .title(module.getTitle())
@@ -180,9 +207,9 @@ public class CourseService {
                         ? module.getLessons().stream().map(l -> LessonResponse.builder()
                         .id(l.getId())
                         .title(l.getTitle())
-                        .content(l.getContent())
-                        .videoUrl(l.getVideoUrl())
-                        .fileUrl(l.getFileUrl())
+                        .content(canAccessLessons ? l.getContent() : null)
+                        .videoUrl(canAccessLessons ? l.getVideoUrl() : null)
+                        .fileUrl(canAccessLessons ? l.getFileUrl() : null)
                         .durationMinutes(l.getDurationMinutes())
                         .orderIndex(l.getOrderIndex())
                         .type(l.getType() != null ? l.getType().name() : null)

@@ -601,7 +601,7 @@
     async function loadStudents(){
         document.getElementById('studentsBody').innerHTML=`<tr><td colspan="5" class="loading-row"><div class="spinner spinner-dark" style="margin:0 auto"></div></td></tr>`;
         try{
-            const allEnr=norm(await req('GET','/enrollments'));
+            const allEnr=norm(await req('GET','/enrollments/instructor/my'));
             if(!allCourses.length) await loadOverview();
             const myCourseIds=new Set(allCourses.map(c=>c.id));
             allEnrollments=myCourseIds.size>0?allEnr.filter(e=>myCourseIds.has(e.courseId??e.course?.id)):allEnr;
